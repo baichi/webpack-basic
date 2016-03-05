@@ -1,8 +1,8 @@
 var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
-
 var publicPath = path.resolve(__dirname, 'public');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -15,7 +15,7 @@ module.exports = {
     },
     output: {
         path: publicPath,
-        filename: 'index.js'
+        filename: '[name].js?[hash]'
     },
     resolve: {
       extension: ['', '.js', '.jsx', '.json']
@@ -48,8 +48,15 @@ module.exports = {
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoErrorsPlugin(),
-      new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js'),
-      new ExtractTextPlugin("bundle.css")
+      new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js?[hash]'),
+      new ExtractTextPlugin("[name].css?[hash]", {
+          allChunks: true,
+          disable: false
+      }),
+      new HtmlWebpackPlugin({
+        title: 'zhufeng-react',
+        template: './app/index.html',
+      })
     ],
-    devtool: 'source-map'
+    devtool: 'cheap-module-source-map'
 };
